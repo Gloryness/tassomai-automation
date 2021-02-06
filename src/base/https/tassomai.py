@@ -21,7 +21,10 @@ class Tassomai:
             "capabilities": {"image": True, "isMobile": False, "mathjax": True}
         }
         login = self.session.post('https://kolin.tassomai.com/api/user/login/', data=params)
-        auth = 'Bearer ' + login.json()['token']
+        try:
+            auth = 'Bearer ' + login.json()['token']
+        except:
+            print(f'Error: \n{login.json()}')
 
         self.headers = {
             'Accept': "application/json; version=1.5",
