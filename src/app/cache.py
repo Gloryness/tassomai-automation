@@ -1,4 +1,5 @@
 import compress_json
+import json
 import os
 import subprocess
 
@@ -19,12 +20,13 @@ class Database:
         if self.filename == 'answers.lzma':
             subprocess.call([path('github_db.exe'), '-p', self.folder, '-g'], shell=True)
             content = retreive_temp_data(self.folder)
+            content = json.dumps(str(content), indent=3)
             compress_json.dump(content, self.filename)
 
     def _test_if_empty(self):
         try:
             compress_json.load(self.filename)
-        except:  # If the file is somehow 0 bytes
+        except: # If the file is somehow 0 bytes
             compress_json.dump({}, self.filename)
             return True
         return False
@@ -63,6 +65,7 @@ class Database:
 
         data.update(dictionary)
 
+        data = json.dumps(str(data), indent=3)
         compress_json.dump(data, self.filename)
 
     def get(self, key, *keys):
@@ -77,11 +80,12 @@ class Database:
         data = compress_json.load(self.filename)
         if not self.cached(key):
             return ""
-        evaluated = 'data' + ''.join([f'[{ascii(keyy) if type(keyy) == str else keyy}]' for keyy in keys])
-        return eval(evaluated)
+        evalulated = 'data' + ''.join([f'[{ascii(keyy) if type(keyy) == str else keyy}]' for keyy in keys])
+        return eval(evalulated)
 
     def clear(self):
         empty = self._test_if_empty()
         if empty: return {}
 
-        compress_json.dump({}, self.filename)
+        data = json.loads('{}')
+        compress_json.dump(data, self.filename)
