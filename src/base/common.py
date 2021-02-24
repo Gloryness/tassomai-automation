@@ -36,8 +36,9 @@ def is_admin():
         return False
 
 def retreive_temp_data(folder):
-    data = compress_json.load(folder+'\\temp.lzma')
-    os.remove(folder+'\\temp.lzma') # deleting it as its only temporary
+    path = folder+'\\temp.lzma'
+    data = compress_json.load(path)
+    os.remove(path) # deleting it as its only temporary
     return data
 
 def convert_to_time(x):
