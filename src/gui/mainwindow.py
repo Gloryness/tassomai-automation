@@ -341,8 +341,8 @@ class Window(QMainWindow):
 
         self.outputSender = OutputSender(self.ui.output)
 
-        self.database = Database(f'{os.environ["USERPROFILE"]}/AppData/Local/tassomai-automation/', 'answers.json')
-        self.cache = Database(f'{os.environ["USERPROFILE"]}/AppData/Local/tassomai-automation/', 'info.json')
+        self.database = Database(f'{os.environ["USERPROFILE"]}/AppData/Local/tassomai-automation/', 'answers.lzma')
+        self.cache = Database(f'{os.environ["USERPROFILE"]}/AppData/Local/tassomai-automation/', 'info.lzma')
         all_ = self.database.all()
         keys = list(all_.keys())
         for key in keys:

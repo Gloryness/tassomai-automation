@@ -1,6 +1,6 @@
 import requests
 import ctypes
-import json
+import compress_json
 import os
 
 class Variables:
@@ -36,9 +36,9 @@ def is_admin():
         return False
 
 def retreive_temp_data(folder):
-    with open(folder+'\\temp.json') as f:
-        data = json.load(f)
-    os.remove(folder+'\\temp.json') # deleting it as its only temporary
+    path = folder+'\\temp.lzma'
+    data = compress_json.load(path)
+    os.remove(path) # deleting it as its only temporary
     return data
 
 def convert_to_time(x):
