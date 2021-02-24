@@ -217,17 +217,16 @@ class Session(QObject):
                             rand = round(random.uniform(self.ui.ui.amountOfDelay.value(), self.ui.ui.amountOfDelay2.value()), 2)
                         await asyncio.sleep(rand)
 
-
         except:
             logging.error(traceback.format_exc())
 
-        # subprocess.call([github_db, '-p', self.database.folder, '-g'], shell=True, stdout=sys.stdout)
-        # content = retreive_temp_data(self.database.folder)
-        # content.update(self.tassomai.database)
-        # database = {key: value for key, value in
-        #             sorted(content.items(), key=lambda item: item[0])}
+        subprocess.call([github_db, '-p', self.database.folder, '-g'], shell=True, stdout=sys.stdout)
+        content = retreive_temp_data(self.database.folder)
+        content.update(self.tassomai.database)
+        database = {key: value for key, value in
+                    sorted(content.items(), key=lambda item: item[0])}
 
-        # self.database.store(database)
+        self.database.store(database)
 
         self.shownStats = True
         self.show_stats()

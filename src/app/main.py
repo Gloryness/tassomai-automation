@@ -125,19 +125,19 @@ if __name__ == '__main__':
 
         win.ui.maxQuizes.setValue(abs(options.max_quizes))
 
-        # @atexit.register
-        # def on_exit():
-        #     if establishConnection():
-        #         print('Updating private database...')
-        #         subprocess.call([github_db, '-p', win.database.folder, '-g'], shell=True, stdout=sys.stdout)
-        #         content = retreive_temp_data(win.database.folder)
-        #         content.update(win.database.all())
-        #         win.database.store(content)
-        #
-        #         subprocess.call([github_db, '-e', win.database.filename], shell=True)
-        #         print('Successfully updated!')
-        #     else:
-        #         print('Unable to update the private database.')
+        @atexit.register
+        def on_exit():
+            if establishConnection():
+                print('Updating private database...')
+                subprocess.call([github_db, '-p', win.database.folder, '-g'], shell=True, stdout=sys.stdout)
+                content = retreive_temp_data(win.database.folder)
+                content.update(win.database.all())
+                win.database.store(content)
+
+                subprocess.call([github_db, '-e', win.database.filename], shell=True)
+                print('Successfully updated!')
+            else:
+                print('Unable to update the private database.')
 
         if options.start:
             win.ui.startButton.click()

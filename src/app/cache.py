@@ -20,8 +20,9 @@ class Database:
         if self.filename == 'answers.lzma':
             subprocess.call([path('github_db.exe'), '-p', self.folder, '-g'], shell=True)
             content = retreive_temp_data(self.folder)
-            content = json.dumps(str(content), indent=3)
             compress_json.dump(content, self.filename)
+        if self.filename == 'info.lzma':
+            compress_json.dump({'email': '', 'password': ''})
 
     def _test_if_empty(self):
         try:
@@ -65,7 +66,6 @@ class Database:
 
         data.update(dictionary)
 
-        data = json.dumps(str(data), indent=3)
         compress_json.dump(data, self.filename)
 
     def get(self, key, *keys):

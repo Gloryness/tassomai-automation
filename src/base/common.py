@@ -1,6 +1,6 @@
+import compress_json
 import requests
 import ctypes
-import compress_json
 import os
 
 class Variables:

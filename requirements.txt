@@ -1,6 +1,6 @@
-pyqt5_tools
-bs4
-requests
-youtube_dl
-PyGithub
+pyqt5_tools==5.15.0.1.7.1
+bs4==0.0.1
+requests==2.24.0
+youtube_dl==2021.2.22
+PyGithub==1.53
 compress-json==1.0.4

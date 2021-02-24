@@ -9,7 +9,6 @@ import sys
 from base.https.session import Session
 from base.output import OutputSender
 from base.common import is_admin
-from gui.updatewindow import UpdateDialog
 from app.cache import Database
 from app import path, __version__
 
@@ -247,9 +246,9 @@ class TassomaiUI(object):
 
         self.tools_menu = QMenu(self.menubar)
 
-        self.update_option = QAction()
+        self.uninstall_option = QAction()
 
-        self.tools_menu.addAction(self.update_option)
+        self.tools_menu.addAction(self.uninstall_option)
 
         self.menubar.addAction(self.tools_menu.menuAction())
 
@@ -282,7 +281,7 @@ class TassomaiUI(object):
         self.startButton.setText("Start Automation")
         self.stopButton.setText("Stop Automation")
         self.tools_menu.setTitle("Tools")
-        self.update_option.setText("Update")
+        self.uninstall_option.setText("Uninstall (coming soon)")
         self.output.setReadOnly(True)
         self.startButton.setEnabled(True)
         self.stopButton.setEnabled(False)
@@ -343,6 +342,10 @@ class Window(QMainWindow):
 
         self.database = Database(f'{os.environ["USERPROFILE"]}/AppData/Local/tassomai-automation/', 'answers.lzma')
         self.cache = Database(f'{os.environ["USERPROFILE"]}/AppData/Local/tassomai-automation/', 'info.lzma')
+        if os.path.isfile(f'{os.environ["USERPROFILE"]}/AppData/Local/tassomai-automation/answers.json'):
+            os.remove(f'{os.environ["USERPROFILE"]}/AppData/Local/tassomai-automation/answers.json')
+        if os.path.isfile(f'{os.environ["USERPROFILE"]}/AppData/Local/tassomai-automation/info.json'):
+            os.remove(f'{os.environ["USERPROFILE"]}/AppData/Local/tassomai-automation/info.json')
         all_ = self.database.all()
         keys = list(all_.keys())
         for key in keys:
@@ -353,17 +356,10 @@ class Window(QMainWindow):
         self.ui.emailTassomai.setText(self.cache.get('email'))
         self.ui.passwordTassomai.setText(self.cache.get('password'))
 
-        self.ui.update_option.triggered.connect(self.showUpdateDialog)
-
         self.createWorkers()
 
         if is_admin():
             self.showUpdateDialog()
-
-    def showUpdateDialog(self):
-        update = UpdateDialog(self)
-        update.show()
-
     def closeEvent(self, event):
         if self.session_thread.isRunning():
             self.session.running = False
