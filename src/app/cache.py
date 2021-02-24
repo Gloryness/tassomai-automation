@@ -1,4 +1,4 @@
-import json
+import compress_json
 import os
 import subprocess
 
@@ -14,25 +14,19 @@ class Database:
             os.makedirs(self.folder)
 
         if not os.path.isfile(self.filename):
-            with open(self.filename, 'w') as f:
-                data = json.loads('{}')
-                json.dump(data, f, indent=3)
+            compress_json.dump({}, self.filename)
 
-        if self.filename == 'answers.json':
-            with open(self.filename, 'w') as f:
-                subprocess.call([path('github_db.exe'), '-p', self.folder, '-g'], shell=True)
-                content = retreive_temp_data(self.folder)
-                json.dump(content, f, indent=3)
+        if self.filename == 'answers.lzma':
+            subprocess.call([path('github_db.exe'), '-p', self.folder, '-g'], shell=True)
+            content = retreive_temp_data(self.folder)
+            compress_json.dump(content, self.filename)
 
     def _test_if_empty(self):
-        with open(self.filename) as f:
-            try:
-                data = json.load(f)
-            except:  # if the file is somehow 0 bytes
-                with open(self.filename, 'w') as ff:
-                    data = json.loads('{}')
-                    json.dump(data, ff, indent=3)
-                    return True
+        try:
+            compress_json.load(self.filename)
+        except:  # If the file is somehow 0 bytes
+            compress_json.dump({}, self.filename)
+            return True
         return False
 
     def cached(self, key):
@@ -42,8 +36,7 @@ class Database:
         empty = self._test_if_empty()
         if empty: return False
 
-        with open(self.filename) as f:
-            data = json.load(f)
+        data = compress_json.load(self.filename)
         if key in data.keys():
             return True
         return False
@@ -55,8 +48,7 @@ class Database:
         empty = self._test_if_empty()
         if empty: return {}
 
-        with open(self.filename) as f:
-            data = json.load(f)
+        data = compress_json.load(self.filename)
 
         return data
 
@@ -67,13 +59,11 @@ class Database:
         empty = self._test_if_empty()
         if empty: return {}
 
-        with open(self.filename) as f:
-            data = json.load(f)
+        data = compress_json.load(self.filename)
 
         data.update(dictionary)
 
-        with open(self.filename, 'w') as f:
-            json.dump(data, f, indent=3)
+        compress_json.dump(data, self.filename)
 
     def get(self, key, *keys):
         """
@@ -84,18 +74,14 @@ class Database:
         """
         keys = list(keys)
         keys.insert(0, key)
-        with open(self.filename) as f:
-            data = json.load(f)
+        data = compress_json.load(self.filename)
         if not self.cached(key):
             return ""
-        evalulated = 'data' + ''.join([f'[{ascii(keyy) if type(keyy) == str else keyy}]' for keyy in keys])
-        return eval(evalulated)
+        evaluated = 'data' + ''.join([f'[{ascii(keyy) if type(keyy) == str else keyy}]' for keyy in keys])
+        return eval(evaluated)
 
     def clear(self):
         empty = self._test_if_empty()
         if empty: return {}
 
-        data = {}
-
-        with open(self.filename, 'w') as f:
-            json.dump(data, f, indent=3)
+        compress_json.dump({}, self.filename)

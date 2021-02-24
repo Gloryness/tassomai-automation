@@ -38,7 +38,7 @@ OR:
 - Start Automation!
 - At the end of the automation, it will provide stats such as if daily/bonus goal is complete, the time it took, amount of correct/incorrect answers and the total quizes complete.
 
-**NOTE: Credentials are only stored to `info.json` in AppData/Local/tassomai-automation to auto-fill them in each time you run the GUI.**
+**NOTE: Credentials are only stored to `info.lzma` in AppData/Local/tassomai-automation to auto-fill them in each time you run the GUI.**
 
 # Tip
 If you want... there are command line options that are available!
@@ -76,7 +76,7 @@ This is very useful for scheduling the automation with Windows Task Scheduler on
 
 5. Otherwise, if the question isn't found in `answers.json` then it will call a function that answers a random box by listing all the boxes and using the `random` libary to choose one in the list to click it and return if it's correct or not.
 
-6. If the answer was correct or not, it will call a function to find the correct answer. We do this by looping through all the boxes, and if the boxes `background-color` css property is equal to green - `rgb(201, 240, 195)`, then store `{question: answer}` in `answers.json`.
+6. If the answer was correct or not, it will call a function to find the correct answer. We do this by looping through all the boxes, and if the boxes `background-color` css property is equal to green - `rgb(201, 240, 195)`, then store `{question: answer}` in `answers.lzma`.
 
 7. This is all for 1 question. It will do this X times (depending on how many sections there are in the quiz)
 
