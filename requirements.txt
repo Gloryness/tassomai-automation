@@ -3,3 +3,4 @@ bs4
 requests
 youtube_dl
 PyGithub
+compress-json==1.0.4
