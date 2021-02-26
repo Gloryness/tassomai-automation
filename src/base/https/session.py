@@ -150,8 +150,8 @@ class Session(QObject):
                         if self.until == self.until_incorrect:
                             self.until = 0
                             force_incorrect = True
-                    if '  ' in question:
-                        question = question.replace("  ", " ")
+                    if '  ' in question['text']:
+                        question['text'] = question['text'].replace("  ", " ")
                     question_data, database = await self.tassomai.answer_question(Variables(question, force_incorrect))
                     item = self.ui.ui.table.item(self.row, 0)
                     if item is None:
