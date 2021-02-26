@@ -1,9 +1,10 @@
 import compress_json
 import json
+import sys
 import os
 import subprocess
 
-from app import path
+from app import github_db
 from base.common import retreive_temp_data
 
 class Database:
@@ -17,12 +18,13 @@ class Database:
         if not os.path.isfile(self.filename):
             compress_json.dump({}, self.filename)
 
-        if self.filename == 'answers.lzma':
-            subprocess.call([path('github_db.exe'), '-p', self.folder, '-g'], shell=True)
+        if not os.path.isfile(self.filename) and self.filename.endswith("info.lzma"):
+            compress_json.dump({'email': '', 'password': ''}, self.filename)
+
+        if self.filename.endswith('answers.lzma'):
+            subprocess.call([github_db, '-p', self.folder, '-g'], shell=True, stdout=sys.stdout)
             content = retreive_temp_data(self.folder)
             compress_json.dump(content, self.filename)
-        if self.filename == 'info.lzma':
-            compress_json.dump({'email': '', 'password': ''})
 
     def _test_if_empty(self):
         try:
