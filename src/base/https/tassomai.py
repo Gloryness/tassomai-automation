@@ -1,7 +1,7 @@
 import random
 import requests
 import time
-from base.common import prepare, gather_answers
+from base.common import prepare, gather_answers, clean_string
 
 class Tassomai:
     """
@@ -158,9 +158,9 @@ class Tassomai:
                 self.database[data.question['text']][sc] = prepare(data.question['answers'])
             for answer in data.question['answers']:
                 if data.question['text'] in self.database:
-                    if answer['text'] != self.database[data.question['text']][sc] and data.force_incorrect:
+                    if clean_string(answer['text']) != self.database[data.question['text']][sc] and data.force_incorrect:
                         to_answer = answer
-                    if answer['text'] == self.database[data.question['text']][sc]:
+                    if clean_string(answer['text']) == self.database[data.question['text']][sc]:
                         if data.force_incorrect:
                             continue
                         to_answer = answer
@@ -188,7 +188,7 @@ class Tassomai:
 
         print(f'-----------{self.quiz_data["questions"].index(data.question)+1}-----------')
         print(data.question['text'])
-        print("Answering:", to_answer['text'], ':', to_answer['id'])
+        print("Answering:", clean_string(to_answer['text']), ':', to_answer['id'])
         while True:
             try:
                 answer = self.session.post(f'https://kolin.tassomai.com/api/answer/{data.question["asking_id"]}/',
@@ -205,22 +205,22 @@ class Tassomai:
 
         if answer['is_correct']:
             if data.question['text'] in self.database:
-                self.database[data.question['text']][sc] = to_answer['text']
+                self.database[data.question['text']][sc] = clean_string(to_answer['text'])
             else:
-                self.database[data.question['text']] = {sc: to_answer['text']}
+                self.database[data.question['text']] = {sc: clean_string(to_answer['text'])}
         else:
             if data.question['text'] in self.database:
                 if type(self.database[data.question['text']][sc]) == dict:
                     try:
-                        del self.database[data.question['text']][sc][to_answer['text']]
+                        del self.database[data.question['text']][sc][clean_string(to_answer['text'])]
 
                         if len(self.database[data.question['text']][sc]) == 1:
-                            self.database[data.question['text']][sc] = list(self.database[data.question['text']][sc].keys())[0]
+                            self.database[data.question['text']][sc] = clean_string(list(self.database[data.question['text']][sc].keys())[0])
                     except:
                         pass
             else:
                 self.database[data.question['text']] = {sc: prepare(data.question['answers'])}
-                del self.database[data.question['text']][sc][to_answer['text']]
+                del self.database[data.question['text']][sc][clean_string(to_answer['text'])]
         if type(self.database[data.question['text']][sc]) == dict:
             answers = [item for item in self.database[data.question['text']][sc]]
         else:

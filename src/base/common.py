@@ -20,14 +20,21 @@ def establishConnection():
     except:
         return False
 
+def clean_string(string):
+    """
+    Remove the double spaces from a string.
+    """
+    string = string.replace("  ", " ")
+    return string
+
 def calculate_percentage(number, total):
     return round((number/total) * 100, 1)
 
 def prepare(answers):
-    return dict(zip([answer['text'] for answer in answers], ["?" for i in range(4)]))
+    return dict(zip([clean_string(answer['text']) for answer in answers], ["?" for i in range(4)]))
 
 def gather_answers(answers):
-    return list(sorted([answer['text'] for answer in answers]))
+    return list(sorted([clean_string(answer['text']) for answer in answers]))
 
 def is_admin():
     try:
