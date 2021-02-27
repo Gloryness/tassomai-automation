@@ -1,5 +1,6 @@
 import time
 import subprocess
+import compress_json
 import asyncio
 import requests
 import random
@@ -97,6 +98,8 @@ class Session(QObject):
         subprocess.call([github_db, '-p', self.database.folder, '-g'], shell=True, stdout=sys.stdout)
         content = retreive_temp_data(self.database.folder)
         self.database.store(content)
+        content = self.database.organise()
+        compress_json.dump(content, self.database.filename)
 
         self.logger.emit('TYPES=[(BOLD, #000000), Successfully updated local database by fetching the Private Answers Database!]', {'newlinesafter': 2})
         print("Successfully updated local database by fetching the Private Answers Database!\n")
@@ -206,6 +209,8 @@ class Session(QObject):
                     database = {key: value for key, value in
                                 sorted(content.items(), key=lambda item: item[0])}
                     self.database.store(database)
+                    content = self.database.organise()
+                    compress_json.dump(content, self.database.filename)
                     return
 
                 self.quizes += 1
@@ -228,8 +233,9 @@ class Session(QObject):
         content.update(self.tassomai.database)
         database = {key: value for key, value in
                     sorted(content.items(), key=lambda item: item[0])}
-
         self.database.store(database)
+        content = self.database.organise()
+        compress_json.dump(content, self.database.filename)
 
         self.shownStats = True
         self.show_stats()

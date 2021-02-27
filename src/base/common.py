@@ -1,6 +1,5 @@
 import compress_json
 import requests
-import ctypes
 import os
 
 class Variables:
@@ -35,12 +34,6 @@ def prepare(answers):
 
 def gather_answers(answers):
     return list(sorted([clean_string(answer['text']) for answer in answers]))
-
-def is_admin():
-    try:
-        return ctypes.windll.shell32.IsUserAnAdmin()
-    except:
-        return False
 
 def retreive_temp_data(folder):
     path = folder+'\\temp.lzma'

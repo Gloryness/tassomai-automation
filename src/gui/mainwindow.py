@@ -8,7 +8,6 @@ import sys
 
 from base.https.session import Session
 from base.output import OutputSender
-from base.common import is_admin
 from app.cache import Database
 from app import path, __version__
 
@@ -346,6 +345,7 @@ class Window(QMainWindow):
             os.remove(f'{os.environ["USERPROFILE"]}/AppData/Local/tassomai-automation/answers.json')
         if os.path.isfile(f'{os.environ["USERPROFILE"]}/AppData/Local/tassomai-automation/info.json'):
             os.remove(f'{os.environ["USERPROFILE"]}/AppData/Local/tassomai-automation/info.json')
+
         all_ = self.database.all()
         keys = list(all_.keys())
         for key in keys:
@@ -358,8 +358,6 @@ class Window(QMainWindow):
 
         self.createWorkers()
 
-        if is_admin():
-            self.showUpdateDialog()
     def closeEvent(self, event):
         if self.session_thread.isRunning():
             self.session.running = False

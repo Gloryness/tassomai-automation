@@ -1,4 +1,5 @@
 import sys
+import compress_json
 import optparse
 import atexit
 import subprocess
@@ -6,7 +7,7 @@ import logging, traceback
 
 from PyQt5.QtWidgets import QApplication
 from youtube_dl.compat import compat_get_terminal_size
-from app import github_db
+from app import github_db, __version__
 from base.common import establishConnection, retreive_temp_data
 
 columns = compat_get_terminal_size().columns # you could call this 'hipity hopity this is now my property'
@@ -128,14 +129,19 @@ if __name__ == '__main__':
         @atexit.register
         def on_exit():
             if establishConnection():
-                print('Updating private database...')
-                subprocess.call([github_db, '-p', win.database.folder, '-g'], shell=True, stdout=sys.stdout)
-                content = retreive_temp_data(win.database.folder)
-                content.update(win.database.all())
-                win.database.store(content)
+                if __version__ != (version := win.session.get_version()):
+                    print(f"You can only update the private database if you're using the latest version! (v{version})")
+                else:
+                    print('Updating private database...')
+                    subprocess.call([github_db, '-p', win.database.folder, '-g'], shell=True, stdout=sys.stdout)
+                    content = retreive_temp_data(win.database.folder)
+                    content.update(win.database.all())
+                    win.database.store(content)
+                    content = win.database.organise()
+                    compress_json.dump(content, win.database.filename)
 
-                subprocess.call([github_db, '-e', win.database.filename], shell=True)
-                print('Successfully updated!')
+                    subprocess.call([github_db, '-e', win.database.filename], shell=True)
+                    print('Successfully updated!')
             else:
                 print('Unable to update the private database.')
 
