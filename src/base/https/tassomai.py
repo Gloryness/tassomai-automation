@@ -68,7 +68,6 @@ class Tassomai:
         Check your daily goal.
         """
         goals = self.session.get('https://kolin.tassomai.com/api/daily-goals/', headers=self.headers)
-        print(goals.json())
         return int(goals.json()['goals']['disciplines']['1']['goal']['progress'])
 
     def daily_goal(self):
