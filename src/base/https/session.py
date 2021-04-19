@@ -198,7 +198,7 @@ class Session(QObject):
                 end_time = time.perf_counter() - quiz_timer
                 print(f"Completed quiz {loop} in {end_time:0.2f}s")
                 self.logger.emit(f"Completed quiz {loop} in {end_time:0.2f}s", {'color': '#7214ff', 'bold': True})
-                print(len(self.database.all()), "questions answered!\n")
+                print(len(self.database.all()), "total questions answered!\n")
 
                 loop += 1
 

@@ -27,7 +27,7 @@ class Tassomai:
             print(f'Error: \n{login.json()}')
 
         self.headers = {
-            'Accept': "application/json; version=1.5",
+            'Accept': "application/json; version=1.8",
             'Accept-Encoding': "gzip, deflate, br",
             'Accept-Language': "en-GB, en;q=0.5",
             'Host': 'kolin.tassomai.com',
@@ -68,6 +68,7 @@ class Tassomai:
         Check your daily goal.
         """
         goals = self.session.get('https://kolin.tassomai.com/api/daily-goals/', headers=self.headers)
+        print(goals.json())
         return int(goals.json()['goals']['disciplines']['1']['goal']['progress'])
 
     def daily_goal(self):
